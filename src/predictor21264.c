@@ -12,5 +12,4 @@ bool make_prediction (unsigned int pc)
 
 void train_predictor (unsigned int pc, bool outcome)
 {
-
 }
