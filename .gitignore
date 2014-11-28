@@ -1,0 +1,4 @@
+*.o
+*~
+src/predictor21264
+src/predictororg

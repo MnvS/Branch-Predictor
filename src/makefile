@@ -1,17 +1,22 @@
 CC=g++
 OPTS=-g
 
-all: main.o traceread.o predictor21264.o
-	$(CC) $(OPTS) -lm -o predictor main.o traceread.o predictor21264.o
+all: predictor21264 predictororg
 
-main.o: main.C traceread.h predictor.h
-	$(CC) $(OPTS) -c main.C
+predictor21264: main.o traceread.o predictor21264.o
+	$(CC) $(OPTS) -lm -o predictor21264 main.o traceread.o predictor21264.o
+
+predictororg: main.o traceread.o predictororg.o
+	$(CC) $(OPTS) -lm -o predictororg main.o traceread.o predictororg.o
 
 traceread.o: traceread.h traceread.C
 	$(CC) $(OPTS) -c traceread.C
 
-predictor21264.o: predictor21264.h predictor21264.C
-	$(CC) $(OPTS) -c predictor21264.C
+predictor21264.o: predictor21264.h predictor21264.c
+	$(CC) $(OPTS) -c predictor21264.c
 
+predictororg.o: predictororg.h predictororg.C
+	$(CC) $(OPTS) -c predictororg.C
+	
 clean:
-	rm -f *.o predictor;
+	rm -f *.o predictororg predictor21264;
