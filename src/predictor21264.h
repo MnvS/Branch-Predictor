@@ -1,6 +1,6 @@
 #ifndef PREDICTOR21264_H
 #define PREDICTOR21264_H
-
+#include <stdio.h>
 /*
   Define all your tables and their sizes here.
   All tables must be statically-sized.
@@ -13,46 +13,28 @@
   case the simulator will use more memory -- that's okay, we're only
   concerned about the memory used by the simulated branch predictor.
 */
-
-//Create 10-bit sizes for entries on the local history table
-typedef struct localEntry {
-	unsigned int entry:10;
-} lEntry;
-
 //Create 1024 entries for local history table
 typedef struct localHistory {
-	lEntry table[1024];
+	unsigned short table[1024];
 } localTable;
-
-//Create 3-bit sizes for prediction table entries
-typedef struct predictEntry {
-	unsigned int entry:3;
-} pEntry;
 
 //Create 1024 entries for local prediction table
 typedef struct localPredict {
-	pEntry table[1024];
+	char table[1024];
 } predictionTable;
 
 //Create Global History Table
-typedef struct globalHistory {
-	unsigned int history:12;
-} globalTable;
-
-//Create entry sizes for the global prediction table and the chooser prediction table
-typedef struct globalEntry {
-	unsigned int entry:2;
-} gEntry;
+unsigned int globalHistory;
 
 //Create Global Prediction Table
-typedef struct globalPrediction {
-	gEntry table[4096];
+typedef struct globalTable {
+	char table[4096];
 } gPredictionTable;
 
 //Create Chooser Prediction table
-typedef struct predictionTable {
-	gEntry table[4096];
-}
+typedef struct chooserPredictionTable {
+	char table[4096];
+} chooserTable;
 
 
 /*
@@ -73,5 +55,12 @@ bool make_prediction (unsigned int pc);
   indicates that the branch was not taken).
 */
 void train_predictor (unsigned int pc, bool outcome);
+
+bool local_prediction (unsigned short index);
+void update_local_predictor (unsigned short index, bool outcome);
+
+bool global_prediction ();
+void update_global_predictor ();
+
 
 #endif
