@@ -24,5 +24,6 @@ void init_predictor(){
 }
 
 bool make_prediction(unsigned int pc){
-	return branch_history_table[pc ^ global_history.val].counter | 2;
+	unsigned index = (pc ^ global_history.val) & GLOBAL_MASK;
+	return branch_history_table[index].counter & 2;
 }
