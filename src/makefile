@@ -4,7 +4,7 @@ OPTS=-g
 all: predictor21264 predictororg
 
 predictor21264: main.o traceread.o predictor21264.o
-	$(CC) $(OPTS) -Wall -lm -o predictor21264 main.o traceread.o predictor21264.o
+	$(CC) $(OPTS) -lm -o predictor21264 main.o traceread.o predictor21264.o
 
 predictororg: main.o traceread.o predictororg.o
 	$(CC) $(OPTS) -lm -o predictororg main.o traceread.o predictororg.o

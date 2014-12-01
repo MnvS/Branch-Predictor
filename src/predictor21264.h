@@ -13,18 +13,33 @@
   case the simulator will use more memory -- that's okay, we're only
   concerned about the memory used by the simulated branch predictor.
 */
-//Create 1024 entries for local history table
-typedef struct localHistory {
-	unsigned short table[1024];
-} localTable;
 
-//Create 1024 entries for local prediction table
-typedef struct localPredict {
-	char table[1024];
-} predictionTable;
+//Define Sizes for entries
 
-//Create Global History Table
-unsigned int globalHistory;
+//Create 10 bit local history size
+struct localHistoryEntry {
+	unsigned entry : 10;
+};
+
+//Create 3 bit saturation for local prediction
+struct localPredictEntry {
+	unsigned entry : 3;
+};
+
+//Create Table for local History
+struct localHistoryEntry localHist[1024];
+
+
+//Create Table for Local Prediction
+struct localPredictEntry localPredict[1024];
+
+
+//Define tables
+
+//12 bit history integer
+struct gHistory {
+	unsigned history : 12;
+} globalHistory;
 
 //Create Global Prediction Table
 typedef struct globalTable {
