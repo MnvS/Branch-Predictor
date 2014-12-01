@@ -55,12 +55,13 @@ bool make_prediction (unsigned int pc);
   indicates that the branch was not taken).
 */
 void train_predictor (unsigned int pc, bool outcome);
+void update_chooser(unsigned short index, bool outcome);
 
 bool local_prediction (unsigned short index);
 void update_local_predictor (unsigned short index, bool outcome);
 
 bool global_prediction ();
-void update_global_predictor ();
+void update_global_predictor (bool outcome);
 
 
 #endif
