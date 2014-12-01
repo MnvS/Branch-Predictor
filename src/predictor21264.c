@@ -1,4 +1,3 @@
-// A very stupid predictor.  It will always predict not taken.
 #include "predictor21264.h"
 
 localTable localHistory;
@@ -35,11 +34,9 @@ bool make_prediction (unsigned int pc)
 	//Determine to use global or local predictors
 	if (cPredictionTable.table[historyIndex] <= 1) {
 		//Use Local Table
-		printf("Local Prediction PC: %12u Index %4hu\n", pc ,index);
 		return local_prediction(index);
 	} else {
 		//Use Global Table
-		printf("Global Prediction\n");
 		return global_prediction();
 	}
   return false;
@@ -64,16 +61,13 @@ void update_chooser(unsigned short index, bool outcome) {
 	//Cross check choices to actual outcome
 	if (localChoice == outcome && globalChoice != outcome) {
 		//Local Choice was correct
-		printf("\tLocal Choice was correct\n");
 		if (cPredictionTable.table[historyIndex] > 0)
 			cPredictionTable.table[historyIndex]--;
 	} else if (localChoice != outcome && globalChoice == outcome) {
 		//Global Choice was correct
-		printf("\tGlobal Choice was correct\n");
 		if (cPredictionTable.table[historyIndex] < 3)
 			cPredictionTable.table[historyIndex]++;
 	}
-	printf("\tBoth predictors the same\n");
 }
 
 
@@ -84,11 +78,9 @@ bool local_prediction(unsigned short index) {
 	//Determine if branch is taken or not
 	if (localPrediction.table[predictIndex] < 4) {
 		//Assume not taken
-		//printf("\tLocal: Not taken\n");
 		return false;
 	} else {
 		//Assume taken
-		//printf("\tLocal: Taken\n");
 		return true;
 	}
 }
@@ -98,7 +90,7 @@ void update_local_predictor (unsigned short index, bool outcome) {
 	unsigned short predictIndex = localHistory.table[index] & 0x3FF;
 	unsigned short prediction = localPrediction.table[predictIndex] & 7;
 	//Ensure that saturation values remain in defined domains (0-3)
-	if (prediction >= 0 && prediction < 7) {
+	/*if (prediction >= 0 && prediction < 7) {
 		if (outcome) {
 			//Outcome was taken so increment local prediction saturation
 			localPrediction.table[predictIndex]++;
@@ -106,6 +98,13 @@ void update_local_predictor (unsigned short index, bool outcome) {
 			//Outcome was not taken so decrement local prediction saturation
 			localPrediction.table[predictIndex]--;
 		}
+	}*/
+	if (outcome) {
+		if (prediction < 7)
+			localPrediction.table[predictIndex]++;
+	} else {
+		if (prediction > 0)
+			localPrediction.table[predictIndex]--;
 	}
 
 	//Update Local History
@@ -113,13 +112,13 @@ void update_local_predictor (unsigned short index, bool outcome) {
 	localHistory.table[index] = (localHistory.table[index]) << 1;
 	if (outcome) {
 		//If outcome was true, set history bit
-		printf("\tLast outcome was true\n");
 		localHistory.table[index]++;
 	}
-	printf("\tUpdate: Local History now at: %4x\n", localHistory.table[index]);
-	printf("\tUpdate: Local Predict now at: %4x\n", localPrediction.table[predictIndex]);
 }
 
+/*
+ * 
+ */
 bool global_prediction () {
 	//Create index from 12 bit history
 	unsigned int index = globalHistory & 0xFFF;
@@ -137,5 +136,4 @@ void update_global_predictor (bool outcome) {
 	globalHistory = globalHistory << 1;
 	if (outcome)
 		globalHistory++;
-	printf("\tUpdate: Global PC now at: %4x\n", globalHistory);
 }
